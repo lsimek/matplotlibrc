@@ -134,8 +134,6 @@ def draw_plots(style=None, filename=None, **rc_params):
         
         plt.savefig(path)
         
-        plt.savefig(path)
-        
 if __name__ == '__main__':
     for style in [
         None,
@@ -146,4 +144,4 @@ if __name__ == '__main__':
     ]:
         name = style[:-len('.mplstyle')] if style is not None else 'default'
         draw_plots(style=style, filename=f'{name}.png')
-    
+

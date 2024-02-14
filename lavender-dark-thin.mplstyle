@@ -9,7 +9,7 @@ axes.edgecolor:		"#ffffff"
 figure.facecolor:	"#202020"
 figure.edgecolor:	"#202020"
 axes.labelcolor:	"#ffffff"
-axes.prop_cycle: 	cycler('color', ['e0c6ff', 'c2ff79', '87ceeb', 'ffe9c6', '6cff74', 'dda0dd', 'ffdfc6', 'c6ff38'])
+axes.prop_cycle: 	cycler('color', ['e0c6ff', 'c2ff79', 'abeaff', 'fff2a8', 'c6ffe8', 'dda0dd', 'ffdfc6', 'd6c2ad'])
 
 xtick.color:	"#ffffff"
 ytick.color:	"#ffffff"
