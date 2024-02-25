@@ -5,6 +5,8 @@ requirements: matplotlib, seaborn, numpy, scipy
 """
 
 import os
+import argparse
+from pathlib import Path
 
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -12,7 +14,7 @@ import seaborn as sns
 import numpy as np
 from scipy.stats import t, norm
 
-def draw_plots(style=None, filename=None, **rc_params):
+def draw_plots(style=None, filename=None, overwrite=False, **rc_params):
     """
     draw various matplotlib/seaborn plots in chosen style
     saves to plots/filename.png if filename is set
@@ -28,6 +30,8 @@ def draw_plots(style=None, filename=None, **rc_params):
         except FileNotFoundError:
             print(f'Could not find file {style}')
             return
+    else:
+        plt.style.use('default')
 
     for key, value in rc_params.items():
         try:
@@ -40,9 +44,6 @@ def draw_plots(style=None, filename=None, **rc_params):
     bg_color, text_color = plt.rcParams['figure.facecolor'], plt.rcParams['axes.labelcolor']
         
     nrows, ncols = 2, 3
-    if (nrows * ncols < 6):
-        raise ValueError('Too few plots.')
-        
     fig, ax = plt.subplots(nrows, ncols, figsize=np.array(plt.rcParams['figure.figsize'])*np.array([ncols * 1.2, nrows * 1.2]))
     fig.suptitle(f'Various graphs, style={"default" if style is None else style} with {rc_params=}')
     ax_iter = iter(ax.flatten())
@@ -126,22 +127,26 @@ def draw_plots(style=None, filename=None, **rc_params):
         os.makedirs('plots/', exist_ok=True)
         if not filename.endswith('.png'):
             filename += '.png'
-        path = f'plots/{filename}'
-        no = 1
 
-        while os.path.exists(path):
-            path = f'plots/{filename}-{(no := no + 1)}.png'
+        path = f'plots/{filename}'
+        
+        if not overwrite:
+            no = 1
+            while os.path.exists(path):
+                path = f'plots/{filename}-{(no := no + 1)}.png'
         
         plt.savefig(path)
         
 if __name__ == '__main__':
-    for style in [
-        None,
-        'seagreen-light-thick.mplstyle',
-        'seagreen-light-thin.mplstyle',
-        'lavender-dark-thick.mplstyle',
-        'lavender-dark-thin.mplstyle'
-    ]:
-        name = style[:-len('.mplstyle')] if style is not None else 'default'
-        draw_plots(style=style, filename=f'{name}.png')
+    parser = argparse.ArgumentParser(description='Test matplotlib stylesheets.')
+    parser.add_argument('-s', '--style', type=str, nargs='+', help='list of .mplstyle files')
+    parser.add_argument('-o', '--overwrite', action='store_true', help='overwrite existing files')
+    args = parser.parse_args()
+    
+    style_list = args.style if args.style is not None else [filename for filename in os.listdir('.') if filename.endswith('.mplstyle')]
 
+    style_list.extend([None])
+    for style in style_list:
+        name = style[:-len('.mplstyle')] if style is not None else 'default'
+        draw_plots(style=style, filename=f'{name}.png', overwrite=args.overwrite)
+    
