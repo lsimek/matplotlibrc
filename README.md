@@ -6,6 +6,8 @@ My custom templates for Matplotlib/Seaborn. Also contains `testing_script.py` wh
 with a more pleasant color scheme and an elegant minimalist design. There are also *thick* (for better visibility)
 and *thin* (lighter) variants.
 
+- `navy` is a more academic style with dark colors on a white background.
+
 ## Examples
 - seagreen-light-thick
 
@@ -21,6 +23,9 @@ and *thin* (lighter) variants.
 
 - lavender-dark-thin
 <img src="plots/lavender-dark-thin.png">
+
+- navy
+<img src="plots/navy.png">
 
 ## How to Use
 It is possible to load a `.mplstyle` file remotely

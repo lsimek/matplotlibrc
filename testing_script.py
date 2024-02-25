@@ -41,13 +41,14 @@ def draw_plots(style=None, filename=None, overwrite=False, **rc_params):
             continue
 
     colors = plt.rcParams['axes.prop_cycle'].by_key()['color']
-    bg_color, text_color = plt.rcParams['figure.facecolor'], plt.rcParams['axes.labelcolor']
+    bg_color, text_color = plt.rcParams.get('figure.facecolor'), plt.rcParams.get('axes.labelcolor')
+    using_latex = plt.rcParams.get('text.usetex')
         
     nrows, ncols = 2, 3
     fig, ax = plt.subplots(nrows, ncols, figsize=np.array(plt.rcParams['figure.figsize'])*np.array([ncols * 1.2, nrows * 1.2]))
     fig.suptitle(f'Various graphs, style={"default" if style is None else style} with {rc_params=}')
     ax_iter = iter(ax.flatten())
-
+    
     # 1 -- penguins (barplots)
     penguins = sns.load_dataset("penguins")
     g = sns.barplot(
@@ -55,26 +56,26 @@ def draw_plots(style=None, filename=None, overwrite=False, **rc_params):
         x="species", y="body_mass_g", hue="sex", errorbar=None,
         ax=(ax := next(ax_iter))
     )
-    ax.set_ylabel('Body mass (g)')
+    ax.set_ylabel('Body mass (g)' if not using_latex else r'Body mass ($\text g$)')
     g.set_title('Penguin body mass (sns)')
 
     # 2 -- random walks
     sns.lineplot(
         np.random.choice([1, -1], size=5000).cumsum(),
         ax=(ax := next(ax_iter)),
-        label='p=0.5'
+        label='p=0.5' if not using_latex else r'$p=0.5$'
     )
     sns.lineplot(
         np.random.choice([1, -1], p=[0.51, 0.49], size=5000).cumsum(),
         ax=ax,
         color=colors[1],
-        label='p=0.51'
+        label='p=0.51' if not using_latex else r'$p=0.51$'
     )
     sns.lineplot(
         np.random.choice([1, -1], p=[0.49, 0.51], size=5000).cumsum(),
         ax=ax,
         color=colors[2],
-        label='p=0.49'
+        label='p=0.49' if not using_latex else r'$p=0.49$'
     )
     ax.set_xlabel('Step no.')
     ax.set_ylabel('Distance')
@@ -86,11 +87,11 @@ def draw_plots(style=None, filename=None, overwrite=False, **rc_params):
     x=np.random.uniform(0, 20, (100, ))
     y=coeff * x + inter + np.random.normal(0, 5, (100, ))
     ax.scatter(x, y)
-    ax.plot(x := np.linspace(-2, 22, 1000), coeff * x + inter, linestyle='--', color=colors[1], label='y=2x+3')
+    ax.plot(x := np.linspace(-2, 22, 1000), coeff * x + inter, linestyle='--', color=colors[1], label='y=2x+3' if not using_latex else r'$y=2x+3$')
     ax.legend()
     ax.grid()
-    ax.set_xlabel('x')
-    ax.set_ylabel('y')
+    ax.set_xlabel('x' if not using_latex else r'$x$')
+    ax.set_ylabel('y' if not using_latex else r'$y$')
     ax.set_title('Linear model')
 
     # 4 -- t distributions
@@ -102,8 +103,8 @@ def draw_plots(style=None, filename=None, overwrite=False, **rc_params):
     ax.plot(x, norm.pdf(x), linestyle=':', alpha=1, color=text_color, label='normal')
     ax.legend()
     ax.set(
-        title='t-distributions',
-        xlabel='x',
+        title='t-distributions' if not using_latex else r'$t$-distributions',
+        xlabel='x' if not using_latex else r'$x$',
         ylabel='Density'
     )
 
@@ -120,7 +121,7 @@ def draw_plots(style=None, filename=None, overwrite=False, **rc_params):
     ax = next(ax_iter)
     df = sns.load_dataset('penguins')
     ax = sns.swarmplot(data=df, x='body_mass_g', y='sex', hue='species')
-    ax.set(title='Penguins II (sns)', xlabel='Body mass (g)', ylabel='')
+    ax.set(title='Penguins II (sns)', xlabel='Body mass (g)' if not using_latex else r'Body mass ($\text g$)', ylabel='')
 
     # save plots to folder plots/
     if filename is not None:
