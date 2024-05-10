@@ -32,7 +32,7 @@ It is possible to load a `.mplstyle` file remotely
 
 ```python
 import matplotlib.pyplot as plt
-plt.style.use('https://raw.githubusercontent.com/tinjano/matplotlibrc/main/lavender-dark-thick.mplstyle')
+plt.style.use('https://raw.githubusercontent.com/lsimek/matplotlibrc/main/lavender-dark-thick.mplstyle')
 ```
 
 Temporary or small changes to the configuration can be made with
